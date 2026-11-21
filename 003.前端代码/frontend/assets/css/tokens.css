@@ -1,0 +1,74 @@
+/* =========================================================
+   轻记 · 设计 Token
+   来源：Stitch DESIGN.md + PRD v1.1.1
+   原则：奶油粉底、深梅子文字、粉色只做点缀
+   ========================================================= */
+
+:root {
+  /* 背景与表面 */
+  --bg: #fff7f9;
+  --bg-deep: #fff0f4;
+  --surface: #ffffff;
+  --surface-soft: #fff7fa;
+  --surface-muted: #fdf1f5;
+
+  /* 品牌 */
+  --primary: #e86193;
+  --primary-strong: #a52c5f;
+  --primary-deep: #7a1c43;
+  --primary-soft: #ffe3ec;
+  --primary-soft-2: #ffd0e1;
+  --primary-tint: #fff0f5;
+
+  /* 文字 */
+  --text: #2b151e;
+  --text-secondary: #5f3d4a;
+  --muted: #7a5462;
+  --faint: #a98996;
+
+  /* 线条与状态 */
+  --border: #f3d6e0;
+  --border-strong: #e9bfd0;
+  --green: #2f7d6d;
+  --green-soft: #e8f7f2;
+  --amber: #9c4b1e;
+  --amber-soft: #fff0e2;
+  --danger: #a9374a;
+  --danger-soft: #fdebee;
+  --focus: #a52c5f;
+
+  /* 圆角 */
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --pill: 999px;
+
+  /* 阴影 */
+  --shadow-card: 0 12px 40px rgba(165, 44, 95, 0.06);
+  --shadow-soft: 0 6px 18px rgba(165, 44, 95, 0.04);
+  --shadow-button: 0 10px 24px rgba(165, 44, 95, 0.22);
+  --shadow-lift: 0 24px 70px rgba(84, 30, 49, 0.16);
+
+  /* 字体 */
+  --font-sans: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --font-num: "Avenir Next", "DIN Alternate", "Plus Jakarta Sans", "PingFang SC", sans-serif;
+
+  /* 尺寸 */
+  --content: 1240px;
+  --header-height: 76px;
+  --gutter: 20px;
+
+  /* 图表色板（已通过色盲/对比度校验） */
+  --chart-1: #e87ba4;
+  --chart-2: #2a78d6;
+  --chart-3: #eb6834;
+  --chart-4: #1baf7a;
+  --chart-5: #eda100;
+  --chart-6: #6250d6;
+  --chart-7: #008300;
+  --chart-8: #e34948;
+  --chart-other: #c9bbc1;
+
+  color-scheme: light;
+}

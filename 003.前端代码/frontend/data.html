@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFF7F9">
+  <meta name="description" content="轻记：数据备份、导入恢复与存储状态原型。">
+  <title>轻记 · 数据与备份</title>
+  <link rel="icon" href="assets/img/peach.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body data-layout="sub" data-page="data" data-title="数据与备份" data-back="settings.html" data-active="settings">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header id="site-header"></header>
+
+  <main id="main" class="page">
+    <div class="subpage">
+      <h1 class="sr-only">数据与备份</h1>
+
+      <div class="info-banner">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shield"></use></svg>
+        <span><strong>账目只存在当前浏览器。</strong>建议每周导出一次完整备份。登录不会把账目同步到其他设备；换设备请先导出，再在新设备导入。备份中不包含密码、恢复码和会话。</span>
+      </div>
+
+      <div class="backup-status"><span class="dot"></span><span>当前为原型演示：导出与导入暂不生成真实文件</span></div>
+
+      <div class="data-grid">
+        <section class="card storage-card" aria-labelledby="storage-title">
+          <div class="storage-card__head">
+            <span class="category-icon category-icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg></span>
+            <div><h2 id="storage-title">本地账本</h2><span>当前浏览器 · 仅本机可见</span></div>
+            <span class="pill pill--green" style="margin-left:auto">正常</span>
+          </div>
+          <div class="storage-foot" style="margin-top:12px"><span>账目 <strong data-tx-count>0 笔</strong></span><span>分类 19 个</span></div>
+          <button class="btn btn--soft btn--sm" style="margin-top:12px" type="button" data-action="persist-storage">申请持久存储</button>
+        </section>
+
+        <section class="card storage-card" aria-labelledby="backup-note-title">
+          <div class="storage-card__head">
+            <span class="category-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-info"></use></svg></span>
+            <div><h2 id="backup-note-title">关于备份</h2><span>JSON 用于恢复，CSV 用于查看</span></div>
+          </div>
+          <p class="settings-inline-note">JSON 完整备份包含账目、分类与设置；CSV 只包含账目明细，适合用 Excel 打开。恢复备份会覆盖当前账号的账本。</p>
+        </section>
+      </div>
+
+      <section class="settings-section" style="margin-top:20px" aria-labelledby="backup-actions-title">
+        <h2 class="section-title" id="backup-actions-title">备份与迁移</h2>
+        <div class="action-grid">
+          <button class="action-tile" type="button" data-action="export-json">
+            <span class="action-tile__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-download"></use></svg></span>
+            <span class="action-tile__copy"><span class="action-tile__title">导出完整备份</span><span class="action-tile__desc">JSON · 包含账目、分类和设置</span></span>
+            <svg class="icon icon--chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+          </button>
+          <button class="action-tile" type="button" data-action="export-csv">
+            <span class="action-tile__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-receipt"></use></svg></span>
+            <span class="action-tile__copy"><span class="action-tile__title">导出 CSV</span><span class="action-tile__desc">适合 Excel / Numbers 查看</span></span>
+            <svg class="icon icon--chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+          </button>
+          <button class="action-tile" type="button" data-action="import-backup">
+            <span class="action-tile__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-upload"></use></svg></span>
+            <span class="action-tile__copy"><span class="action-tile__title">导入备份</span><span class="action-tile__desc">从 JSON 恢复，覆盖当前账本</span></span>
+            <svg class="icon icon--chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+          </button>
+          <button class="action-tile" type="button" data-action="copy-backup">
+            <span class="action-tile__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-copy"></use></svg></span>
+            <span class="action-tile__copy"><span class="action-tile__title">复制备份内容</span><span class="action-tile__desc">微信等下载受限环境使用</span></span>
+            <svg class="icon icon--chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+          </button>
+        </div>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+      </section>
+
+      <section class="settings-section" aria-labelledby="reminder-title">
+        <h2 class="section-title" id="reminder-title">提醒</h2>
+        <div class="card settings-list">
+          <div class="settings-row">
+            <span class="settings-row__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sparkles"></use></svg></span>
+            <span class="settings-row__copy"><span class="settings-row__title">两周没备份时提醒我</span><span class="settings-row__desc">只在应用内提示，不弹窗打扰</span></span>
+            <label class="switch"><input id="backup-reminder" type="checkbox" checked aria-label="开启备份提醒"><span class="switch__track"></span></label>
+          </div>
+        </div>
+        <p class="settings-inline-note">提醒按账号存储。当前为原型演示，不会产生真实通知。</p>
+      </section>
+
+      <div class="danger-zone">
+        <h3>清除当前账号的本地数据</h3>
+        <p>会删除当前账号的所有账目并恢复默认分类，不会注销账号。操作不可撤销，清除前请先导出备份。</p>
+        <button class="btn btn--danger btn--sm" type="button" data-action="clear-data">清除数据</button>
+      </div>
+    </div>
+  </main>
+
+  <nav id="mobile-nav"></nav>
+  <footer id="site-footer"></footer>
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>轻记 · 明细</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff5f8',
+              100: '#ffe3ec',
+              200: '#ffc7d9',
+              300: '#ff9ebb',
+              400: '#f76a96',
+              500: '#e8457d',
+              600: '#cf2965',
+              700: '#a52c5f',
+              800: '#7a1c43',
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans SC"', '"Plus Jakarta Sans"', 'sans-serif'],
+            number: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #FFF5F8;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body class="font-sans text-stone-800 flex flex-col min-h-screen antialiased bg-[#FFF5F8]">
+<!-- 顶部桌面统一导航栏 -->
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-pink-100/60 transition-all">
+<div class="max-w-7xl mx-auto h-20 px-8 md:px-12 flex items-center justify-between"> 
+<!-- 品牌区 -->
+<div class="flex items-center gap-8">
+<a class="flex items-center gap-3 group" href="#">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-400 to-rose-400 flex items-center justify-center shadow-md shadow-pink-200/50 group-hover:scale-105 transition-transform text-white text-xl">
+            🍑
+          </div>
+<span class="text-xl font-bold tracking-tight text-stone-800">轻记</span>
+</a>
+<!-- 导航链接 -->
+<nav class="hidden md:flex items-center gap-1.5 ml-2">
+<a class="px-4 py-2 rounded-xl text-sm font-semibold bg-rose-50 text-rose-600 transition-colors shadow-sm shadow-rose-100/40" href="#">明细</a>
+<a class="px-4 py-2 rounded-xl text-sm font-medium text-stone-600 hover:text-rose-600 hover:bg-rose-50/50 transition-colors" href="#">统计</a>
+<a class="px-4 py-2 rounded-xl text-sm font-medium text-stone-600 hover:text-rose-600 hover:bg-rose-50/50 transition-colors" href="#">我的</a>
+</nav>
+</div>
+<!-- 右侧筛选与个人信息 -->
+<div class="flex items-center gap-4">
+<!-- 月份下拉选择 -->
+<button class="flex items-center gap-2 bg-pink-50/80 hover:bg-pink-100/70 border border-pink-100 px-4 py-2 rounded-full text-stone-700 text-sm font-medium transition-all shadow-sm">
+<span>2023年 10月</span>
+<span class="material-symbols-outlined text-[18px] text-stone-500">expand_more</span>
+</button>
+<!-- 用户头像 -->
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 p-0.5 shadow-sm shadow-rose-200 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-rose-200 transition-all">
+<div class="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-rose-500 text-[20px]">person</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- 主体内容 -->
+<main class="w-full max-w-7xl mx-auto px-8 md:px-12 py-8 flex-1">
+<div class="flex flex-col lg:flex-row gap-8 items-start">
+<!-- 左侧栏：统计总览卡片 & 温暖提示 & 预算 -->
+<div class="w-full lg:w-96 flex flex-col gap-6 flex-shrink-0">
+<!-- 本月总览卡片 -->
+<div class="bg-white rounded-3xl p-6 shadow-[0_12px_40px_rgba(232,97,147,0.06)] border border-pink-100/50 relative overflow-hidden">
+<!-- 柔粉背景装饰圆 -->
+<div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-pink-50/60 pointer-events-none"></div>
+<div class="flex items-center justify-between mb-4 relative z-10">
+<span class="text-sm font-medium text-stone-500">本月支出 (元)</span>
+<span class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 bg-rose-50/80 px-2.5 py-1 rounded-full border border-rose-100/60">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+              +12%
+            </span>
+</div>
+<div class="mb-6 relative z-10">
+<div class="font-number text-3xl font-extrabold tracking-tight text-stone-800">
+              ¥ 4,286.50
+            </div>
+</div>
+<!-- 收入与结余 -->
+<div class="pt-5 border-t border-pink-50/80 grid grid-cols-2 gap-4 relative z-10">
+<div class="flex flex-col">
+<span class="text-xs text-stone-400 mb-1">本月总收入</span>
+<span class="font-number text-base font-bold text-emerald-600">¥12,000.00</span>
+</div>
+<div class="flex flex-col pl-4 border-l border-pink-50">
+<span class="text-xs text-stone-400 mb-1">当前结余</span>
+<span class="font-number text-base font-bold text-stone-700">¥7,713.50</span>
+</div>
+</div>
+</div>
+<!-- 快捷入口预算模块 -->
+<div class="bg-gradient-to-br from-pink-50/80 to-rose-50/40 rounded-3xl p-6 border border-pink-100/50 flex flex-col gap-3 shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-white/90 text-rose-500 flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[18px]">savings</span>
+</div>
+<span class="text-sm font-semibold text-stone-700">10月预算进度</span>
+</div>
+<span class="text-xs font-semibold text-rose-600 hover:underline cursor-pointer">查看详情 &gt;</span>
+</div>
+<div class="w-full bg-white/70 h-2.5 rounded-full overflow-hidden p-0.5 border border-pink-100/60">
+<div class="bg-gradient-to-r from-pink-400 to-rose-500 h-full rounded-full" style="width: 62%"></div>
+</div>
+<div class="flex justify-between text-xs text-stone-500">
+<span>已用 ¥4,286.50 (62%)</span>
+<span class="font-medium text-rose-600">剩余 ¥2,713.50</span>
+</div>
+</div>
+<!-- 记账状态小贴士 -->
+<div class="bg-white/80 rounded-3xl p-6 shadow-[0_12px_40px_rgba(232,97,147,0.04)] border border-pink-100/40 flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-lg shadow-sm">
+              ✨
+            </div>
+<div>
+<div class="text-sm font-semibold text-stone-700">微风记录</div>
+<div class="text-xs text-stone-400">本月已连续打卡 20 天 · 保持极佳</div>
+</div>
+</div>
+<p class="text-xs text-stone-500 leading-relaxed pt-2 border-t border-pink-50/60">
+            「每一笔都很温暖，每一次记录都是给美好生活的一封简信。」
+          </p>
+</div>
+</div>
+<!-- 右侧栏：账目明细列表卡片 充分铺开展满 -->
+<div class="flex-1 w-full flex flex-col gap-6">
+<div class="bg-white rounded-3xl p-8 shadow-[0_12px_40px_rgba(232,97,147,0.06)] border border-pink-100/50 flex-1">
+<!-- 今日账目分组 -->
+<div class="mb-8">
+<div class="flex justify-between items-baseline mb-4 pb-3 border-b border-pink-50">
+<div class="flex items-center gap-3">
+<span class="text-base font-bold text-stone-800">今天</span>
+<span class="text-xs font-medium text-stone-400 bg-pink-50/60 px-2 py-0.5 rounded-full">11月20日 星期一</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-stone-400">共 4 笔</span>
+<span class="text-xs font-semibold text-stone-600">当日支出 ¥86.00</span>
+</div>
+</div>
+<div class="flex flex-col gap-2.5">
+<!-- 单项 1 -->
+<div class="group flex items-center justify-between p-4 rounded-2xl hover:bg-rose-50/40 border border-transparent hover:border-pink-100/60 transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-11 h-11 rounded-2xl bg-amber-50/80 group-hover:bg-amber-100/80 flex items-center justify-center text-xl shadow-sm transition-colors flex-shrink-0">
+                    🍜
+                  </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-stone-800">午餐 · 日式拉面</span>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100">餐饮美食</span>
+</div>
+<div class="text-xs text-stone-400 mt-1 flex items-center gap-3">
+<span>12:30</span>
+<span>·</span>
+<span>微信支付</span>
+<span class="hidden sm:inline">·</span>
+<span class="hidden sm:inline text-stone-400">和同事拼单</span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-4">
+<div class="font-number text-lg font-bold text-stone-800">
+                    -¥28.00
+                  </div>
+<div class="text-[11px] text-stone-400 mt-0.5">日常支出</div>
+</div>
+</div>
+<!-- 单项 2 -->
+<div class="group flex items-center justify-between p-4 rounded-2xl hover:bg-rose-50/40 border border-transparent hover:border-pink-100/60 transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-11 h-11 rounded-2xl bg-blue-50/80 group-hover:bg-blue-100/80 flex items-center justify-center text-xl shadow-sm transition-colors flex-shrink-0">
+                    🚇
+                  </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-stone-800">地铁通勤</span>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">公共交通</span>
+</div>
+<div class="text-xs text-stone-400 mt-1 flex items-center gap-3">
+<span>08:45</span>
+<span>·</span>
+<span>交通卡扣款</span>
+<span class="hidden sm:inline">·</span>
+<span class="hidden sm:inline text-stone-400">2号线往返</span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-4">
+<div class="font-number text-lg font-bold text-stone-800">
+                    -¥6.00
+                  </div>
+<div class="text-[11px] text-stone-400 mt-0.5">日常通勤</div>
+</div>
+</div>
+<!-- 单项 3 -->
+<div class="group flex items-center justify-between p-4 rounded-2xl hover:bg-rose-50/40 border border-transparent hover:border-pink-100/60 transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-11 h-11 rounded-2xl bg-orange-50/80 group-hover:bg-orange-100/80 flex items-center justify-center text-xl shadow-sm transition-colors flex-shrink-0">
+                    ☕
+                  </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-stone-800">午后燕麦拿铁</span>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-orange-50 text-orange-600 border border-orange-100">下午茶</span>
+</div>
+<div class="text-xs text-stone-400 mt-1 flex items-center gap-3">
+<span>14:15</span>
+<span>·</span>
+<span>支付宝</span>
+<span class="hidden sm:inline">·</span>
+<span class="hidden sm:inline text-stone-400">星巴克</span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-4">
+<div class="font-number text-lg font-bold text-stone-800">
+                    -¥32.00
+                  </div>
+<div class="text-[11px] text-stone-400 mt-0.5">品质休闲</div>
+</div>
+</div>
+<!-- 单项 4 -->
+<div class="group flex items-center justify-between p-4 rounded-2xl hover:bg-rose-50/40 border border-transparent hover:border-pink-100/60 transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-11 h-11 rounded-2xl bg-purple-50/80 group-hover:bg-purple-100/80 flex items-center justify-center text-xl shadow-sm transition-colors flex-shrink-0">
+                    🛒
+                  </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-stone-800">便利店日用品</span>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 border border-purple-100">居家生活</span>
+</div>
+<div class="text-xs text-stone-400 mt-1 flex items-center gap-3">
+<span>18:20</span>
+<span>·</span>
+<span>微信支付</span>
+<span class="hidden sm:inline">·</span>
+<span class="hidden sm:inline text-stone-400">纸巾与苏打水</span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-4">
+<div class="font-number text-lg font-bold text-stone-800">
+                    -¥20.00
+                  </div>
+<div class="text-[11px] text-stone-400 mt-0.5">生活杂项</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 昨天账目分组 -->
+<div>
+<div class="flex justify-between items-baseline mb-4 pb-3 border-b border-pink-50">
+<div class="flex items-center gap-3">
+<span class="text-base font-bold text-stone-800">昨天</span>
+<span class="text-xs font-medium text-stone-400 bg-pink-50/60 px-2 py-0.5 rounded-full">11月19日 星期日</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-stone-400">共 2 笔</span>
+<span class="text-xs font-semibold text-stone-600">当日支出 ¥214.00</span>
+</div>
+</div>
+<div class="flex flex-col gap-2.5">
+<!-- 单项 1 -->
+<div class="group flex items-center justify-between p-4 rounded-2xl hover:bg-rose-50/40 border border-transparent hover:border-pink-100/60 transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-11 h-11 rounded-2xl bg-rose-50/80 group-hover:bg-rose-100/80 flex items-center justify-center text-xl shadow-sm transition-colors flex-shrink-0">
+                    🍱
+                  </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-stone-800">周末家庭晚餐</span>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100">餐饮聚会</span>
+</div>
+<div class="text-xs text-stone-400 mt-1 flex items-center gap-3">
+<span>19:10</span>
+<span>·</span>
+<span>银行卡支付</span>
+<span class="hidden sm:inline">·</span>
+<span class="hidden sm:inline text-stone-400">江南灶餐厅</span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-4">
+<div class="font-number text-lg font-bold text-stone-800">
+                    -¥58.00
+                  </div>
+<div class="text-[11px] text-stone-400 mt-0.5">餐饮支出</div>
+</div>
+</div>
+<!-- 单项 2 -->
+<div class="group flex items-center justify-between p-4 rounded-2xl hover:bg-rose-50/40 border border-transparent hover:border-pink-100/60 transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-11 h-11 rounded-2xl bg-sky-50/80 group-hover:bg-sky-100/80 flex items-center justify-center text-xl shadow-sm transition-colors flex-shrink-0">
+                    🚗
+                  </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-stone-800">网约车出行</span>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-sky-50 text-sky-600 border border-sky-100">市内交通</span>
+</div>
+<div class="text-xs text-stone-400 mt-1 flex items-center gap-3">
+<span>22:30</span>
+<span>·</span>
+<span>滴滴快车</span>
+<span class="hidden sm:inline">·</span>
+<span class="hidden sm:inline text-stone-400">商场返回家中</span>
+</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-4">
+<div class="font-number text-lg font-bold text-stone-800">
+                    -¥45.00
+                  </div>
+<div class="text-[11px] text-stone-400 mt-0.5">交通出行</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- 右下角悬浮记一笔按钮 -->
+<button class="fixed right-10 bottom-10 z-40 flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-300/50 hover:shadow-xl hover:shadow-rose-400/50 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]">add</span>
+<span class="text-sm font-semibold tracking-wide">记一笔</span>
+</button>
+
+
+</body></html>

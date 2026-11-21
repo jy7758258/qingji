@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFF7F9">
+  <meta name="description" content="轻记：分类管理原型。">
+  <title>轻记 · 分类管理</title>
+  <link rel="icon" href="assets/img/peach.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body data-layout="sub" data-page="categories" data-title="分类管理" data-back="settings.html" data-active="settings">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header id="site-header"></header>
+
+  <main id="main" class="page">
+    <div class="subpage">
+      <h1 class="sr-only">分类管理</h1>
+
+      <div class="info-banner">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-info"></use></svg>
+        <span>隐藏分类不会影响历史账目和统计；删除自定义分类前，需要先把账目迁移到其他分类。默认分类不能删除。</span>
+      </div>
+
+      <div class="category-toolbar">
+        <div class="segmented" role="group" aria-label="分类类型">
+          <button type="button" data-category-tab="expense" class="is-active" aria-pressed="true">支出</button>
+          <button type="button" data-category-tab="income" aria-pressed="false">收入</button>
+        </div>
+        <button class="btn btn--primary btn--sm" type="button" data-category-add>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>新增分类
+        </button>
+      </div>
+
+      <div class="card category-list" data-category-list="expense">
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--rose"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-bowl"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>餐饮</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 6 个二级分类 · 22 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑餐饮"> <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏餐饮"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row is-sub" data-category-row>
+          <span class="category-icon category-icon--rose category-icon--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-bowl"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>早餐</span></span><span class="category-row__meta">二级分类 · 4 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑早餐"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏早餐"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row is-sub" data-category-row>
+          <span class="category-icon category-icon--rose category-icon--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-bowl"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>午餐</span></span><span class="category-row__meta">二级分类 · 12 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑午餐"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏午餐"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row is-sub" data-category-row>
+          <span class="category-icon category-icon--rose category-icon--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-coffee"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>咖啡茶饮</span></span><span class="category-row__meta">二级分类 · 6 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑咖啡茶饮"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏咖啡茶饮"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--blue"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-train"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>交通</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 4 个二级分类 · 8 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑交通"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏交通"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--amber"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-cart"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>购物</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 4 个二级分类 · 3 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑购物"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏购物"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-home"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>居住</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 4 个二级分类 · 2 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑居住"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏居住"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--violet"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-play"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>娱乐</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 5 个二级分类 · 2 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑娱乐"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏娱乐"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--gray"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-box"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>其他</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 1 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑其他"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏其他"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+      </div>
+
+      <div class="card category-list" data-category-list="income" hidden>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-wallet"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>工资</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 12 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑工资"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏工资"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--amber"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-trophy"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>奖金</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 2 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑奖金"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏奖金"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--violet"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-briefcase"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>兼职</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 3 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑兼职"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏兼职"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-chart"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>理财</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 1 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑理财"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏理财"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--blue"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-receipt"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>报销</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 1 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑报销"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏报销"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+        <div class="category-row" data-category-row>
+          <span class="category-icon category-icon--rose"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-gift"></use></svg></span>
+          <span class="category-row__copy"><span class="category-row__name"><span data-category-name>红包</span><span class="pill pill--pink">默认</span></span><span class="category-row__meta">一级分类 · 0 笔</span></span>
+          <span class="category-row__actions">
+            <button class="mini-btn" type="button" data-category-action="edit" aria-label="编辑红包"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-edit"></use></svg></button>
+            <button class="mini-btn" type="button" data-category-action="toggle" aria-label="隐藏红包"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye-off"></use></svg></button>
+          </span>
+        </div>
+      </div>
+
+      <p class="settings-inline-note" style="margin-top:12px">点击右上角「新增分类」体验添加流程；当前为原型演示，刷新页面后会恢复示例分类。</p>
+    </div>
+  </main>
+
+  <nav id="mobile-nav"></nav>
+  <footer id="site-footer"></footer>
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

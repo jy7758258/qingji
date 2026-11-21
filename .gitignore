@@ -1,0 +1,13 @@
+# macOS / Windows system files
+.DS_Store
+._*
+Thumbs.db
+
+# Local scratch files
+TEMP（可删除）/
+*.log
+
+# Frontend build / dependency output (not present yet, reserved for future)
+node_modules/
+dist/
+build/

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFF7F9">
+  <meta name="description" content="轻记：隐私说明与数据边界。">
+  <title>轻记 · 隐私说明</title>
+  <link rel="icon" href="assets/img/peach.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body data-layout="auth" data-page="privacy">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header id="site-header"></header>
+
+  <main id="main" class="page">
+    <div class="subpage subpage--narrow">
+      <h1 class="sr-only">隐私说明</h1>
+
+      <div class="card" style="padding:20px">
+        <div class="policy">
+          <h2>数据保存在哪里</h2>
+          <p>轻记的账目、分类与设置保存在当前浏览器的 IndexedDB 中，不上传到服务器。认证服务只保存用户名、密码哈希、恢复码哈希和会话，<strong>不保存任何账目、备注或金额</strong>。</p>
+
+          <h2>登录不等于云同步</h2>
+          <p>登录只证明身份和打开对应账号的本地账本，不会把账目同步到其他设备。换设备或清除浏览器数据前，请先在「数据与备份」导出 JSON 备份，再在新设备导入。</p>
+
+          <h2>我们收集什么</h2>
+          <p>注册只要求用户名和密码，不收集手机号、邮箱、头像或通讯录。服务端仅保留必要的账号与会话数据、注册/登录时间和脱敏后的 IP，用于安全审计与限流。</p>
+
+          <h2>数据导出与删除</h2>
+          <ul>
+            <li>随时可以导出完整 JSON 备份或 CSV 明细。</li>
+            <li>可以清除当前账号的本地账本，或注销账号并删除服务端身份。</li>
+            <li>注销前请先导出备份；本机账本是否一并删除可以选择。</li>
+          </ul>
+
+          <h2>第三方</h2>
+          <p>原型不接入第三方广告、社交登录或会读取表单内容的追踪脚本。正式版本若使用分析工具，应提供关闭入口，并确保不包含金额、备注、分类名或账号凭据。</p>
+
+          <h2>风险提示</h2>
+          <ul>
+            <li>清除浏览器数据、无痕模式和部分浏览器的自动清理可能导致本地账目丢失。</li>
+            <li>设备被他人直接访问时，本地账本仍可能被查看；退出登录不会加密磁盘上的 IndexedDB。</li>
+            <li>忘记密码且没有恢复码时，无法自助找回账号。</li>
+            <li>本页面是前端原型，所有账号和数据操作均为演示，不连接真实认证或云服务。</li>
+          </ul>
+        </div>
+
+        <p class="settings-inline-note">产品需求依据：PRD v1.1.1 · 账号与身份认证（F0）及数据备份（F5）。</p>
+        <p class="auth-switch"><a href="login.html">返回登录</a> · <a href="register.html">注册账号</a></p>
+      </div>
+    </div>
+  </main>
+
+  <nav id="mobile-nav"></nav>
+  <footer id="site-footer"></footer>
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFF7F9">
+  <meta name="description" content="轻记：月度与年度收支统计原型。">
+  <title>轻记 · 统计</title>
+  <link rel="icon" href="assets/img/peach.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body data-layout="app" data-page="stats" data-active="stats">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header id="site-header"></header>
+
+  <main id="main" class="page">
+    <div class="page-head">
+      <div>
+        <h1>统计</h1>
+        <p>看见钱去了哪里，才知道可以从哪里开始。</p>
+      </div>
+      <span class="page-head__side" data-page-period>本地账本 · 2026年11月</span>
+    </div>
+
+    <div class="stats-toolbar">
+      <span class="period-pill">
+        <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-calendar"></use></svg>
+        <span data-period-label>2026年11月</span>
+      </span>
+      <span class="stats-toolbar__spacer"></span>
+      <div class="segmented" role="group" aria-label="时间范围">
+        <button type="button" data-stats-view="month" class="is-active" aria-pressed="true">月度</button>
+        <button type="button" data-stats-view="year" aria-pressed="false">年度</button>
+      </div>
+      <div class="segmented" role="group" aria-label="收支类型">
+        <button type="button" data-stats-type="expense" class="is-active" aria-pressed="true">支出</button>
+        <button type="button" data-stats-type="income" aria-pressed="false">收入</button>
+      </div>
+    </div>
+
+    <div class="stats-layout">
+      <aside class="stats-side">
+        <section class="card stat-summary" aria-labelledby="stat-summary-title">
+          <div class="stat-summary__label" id="stat-summary-title" data-stat-summary-label>2026年11月累计支出（元）</div>
+          <div class="stat-total" data-stat-total>¥0.00</div>
+          <div class="stat-delta" data-stat-delta>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-info"></use></svg>
+            <span>还没有记录</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-item"><span>日均</span><strong data-stat-avg>¥0.00</strong></div>
+            <div class="stat-item"><span>记账笔数</span><strong data-stat-count>0 笔</strong></div>
+            <div class="stat-item"><span>最大单笔</span><strong data-stat-max>—</strong></div>
+            <div class="stat-item"><span>记录天数</span><strong data-stat-days>0 天</strong></div>
+          </div>
+        </section>
+
+        <div class="insight-card" aria-label="记账洞察">
+          <div class="insight-card__head">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-sparkles"></use></svg>
+            本月小结
+          </div>
+          <p>记录会慢慢变成生活轨迹。把每一笔留住，月底就能少一点猜测。</p>
+        </div>
+      </aside>
+
+      <div class="stats-main">
+        <section class="card chart-card" aria-labelledby="category-chart-title">
+          <div class="card-head">
+            <div>
+              <h2 id="category-chart-title" data-stats-title>支出分类排行</h2>
+              <p>按一级分类 · 点击分类查看明细</p>
+            </div>
+            <span class="card-head__meta" data-stats-count>共 0 个类别</span>
+          </div>
+          <div class="donut-layout">
+            <div class="donut-wrap">
+              <div id="stats-donut" aria-live="polite"></div>
+              <div class="donut-center">
+                <span data-donut-label>支出合计</span>
+                <strong data-donut-value>¥0.00</strong>
+              </div>
+            </div>
+            <div class="rank-list" id="stats-rank"><div class="chart-empty">还没有支出记录。<br><a class="text-link" href="record.html">去记一笔</a></div></div>
+          </div>
+          <details class="data-table">
+            <summary>查看分类数据表</summary>
+            <table>
+              <thead><tr><th scope="col">分类</th><th scope="col">金额</th><th scope="col">占比</th></tr></thead>
+              <tbody id="stats-table"><tr><td colspan="3" class="muted">还没有支出记录</td></tr></tbody>
+            </table>
+          </details>
+        </section>
+
+        <section class="card chart-card trend-panel" aria-labelledby="trend-title">
+          <div class="card-head">
+            <div>
+              <h2 id="trend-title" data-trend-title>近6个月支出趋势</h2>
+              <p>按月汇总 · 本地账本</p>
+            </div>
+          </div>
+          <div class="trend-chart" id="stats-trend" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <nav id="mobile-nav"></nav>
+  <footer id="site-footer"></footer>
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

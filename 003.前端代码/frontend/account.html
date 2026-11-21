@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFF7F9">
+  <meta name="description" content="轻记：账号与安全设置原型。">
+  <title>轻记 · 账号与安全</title>
+  <link rel="icon" href="assets/img/peach.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body data-layout="sub" data-page="account" data-title="账号与安全" data-back="settings.html" data-active="settings">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header id="site-header"></header>
+
+  <main id="main" class="page">
+    <div class="subpage subpage--narrow">
+      <h1 class="sr-only">账号与安全</h1>
+
+      <section class="card account-card" aria-labelledby="account-name">
+        <span class="avatar avatar--lg" data-user-initial aria-hidden="true">林</span>
+        <div class="account-card__copy">
+          <h2 id="account-name" data-user-name>@xiaolin</h2>
+          <p>注册于 <span data-user-created>2026-03-01</span> · 本地账号</p>
+        </div>
+        <span class="pill pill--pink">已登录</span>
+      </section>
+
+      <div class="info-banner">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-info"></use></svg>
+        <span><strong>登录不等于云同步。</strong>账号只用于身份与本地账本归属；换设备或清缓存后，仍需用备份恢复账目。当前页面为原型演示，不会连接真实认证服务。</span>
+      </div>
+
+      <section class="settings-section" aria-labelledby="account-info-title">
+        <h2 class="section-title" id="account-info-title">账号信息</h2>
+        <div class="card account-section-card">
+          <div class="account-rows">
+            <div class="account-row">
+              <span class="settings-row__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-user"></use></svg></span>
+              <span class="account-row__copy"><span class="account-row__title">用户名</span><span class="account-row__desc">注册后不可修改</span></span>
+              <span class="account-row__value" data-user-name>@xiaolin</span>
+            </div>
+            <div class="account-row">
+              <span class="settings-row__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-calendar"></use></svg></span>
+              <span class="account-row__copy"><span class="account-row__title">注册时间</span><span class="account-row__desc">首次创建账号的日期</span></span>
+              <span class="account-row__value" data-user-created>2026-03-01</span>
+            </div>
+            <div class="account-row">
+              <span class="settings-row__icon settings-row__icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg></span>
+              <span class="account-row__copy"><span class="account-row__title">账本位置</span><span class="account-row__desc">IndexedDB · 仅当前浏览器</span></span>
+              <span class="account-row__value">本机</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section" aria-labelledby="security-title">
+        <h2 class="section-title" id="security-title">安全设置</h2>
+        <div class="card account-section-card">
+          <div class="account-rows">
+            <button class="account-row" type="button" data-action="change-password">
+              <span class="settings-row__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-lock"></use></svg></span>
+              <span class="account-row__copy"><span class="account-row__title">修改密码</span><span class="account-row__desc">需要验证当前密码；修改后其他设备需要重新登录</span></span>
+              <svg class="icon settings-row__chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+            </button>
+            <button class="account-row" type="button" data-action="recovery-code">
+              <span class="settings-row__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-key"></use></svg></span>
+              <span class="account-row__copy"><span class="account-row__title">恢复码</span><span class="account-row__desc">没有邮箱和手机号，恢复码是唯一的自助找回凭证</span></span>
+              <svg class="icon settings-row__chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+            </button>
+            <button class="account-row" type="button" data-action="logout">
+              <span class="settings-row__icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-logout"></use></svg></span>
+              <span class="account-row__copy"><span class="account-row__title">退出登录</span><span class="account-row__desc">本机账本保留，重新登录可继续使用</span></span>
+              <svg class="icon settings-row__chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="danger-zone">
+        <h3>注销账号</h3>
+        <p>注销后账号无法恢复。本机账本可以选择保留或一并删除；用户名会进入冷却期，期间不能重新注册。</p>
+        <button class="btn btn--danger btn--sm" type="button" data-action="delete-account">注销账号</button>
+      </div>
+    </div>
+  </main>
+
+  <nav id="mobile-nav"></nav>
+  <footer id="site-footer"></footer>
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>轻记 · 个人中心与设置</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff5f8',
+              100: '#ffe4ed',
+              200: '#fcd3e1',
+              300: '#f8a5c2',
+              400: '#f26895',
+              500: '#e8457c',
+              600: '#c54677',
+              700: '#a52c5f',
+              800: '#7a2247',
+              900: '#43192a',
+            },
+            plum: {
+              DEFAULT: '#2b151e',
+              muted: '#7a5462',
+              light: '#a6828f',
+              faint: '#f5e8ed',
+              border: '#fae3ec'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #FFF5F8;
+      color: #2b151e;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 450, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#FFF5F8] text-plum selection:bg-brand-100 selection:text-brand-700">
+<!-- Desktop Header -->
+<header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-[#fae3ec]/80 shadow-[0_4px_20px_rgba(232,97,147,0.03)]">
+<div class="max-w-7xl mx-auto h-20 px-8 flex items-center justify-between">
+<!-- Brand Logo & Title -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-brand-300 flex items-center justify-center text-white shadow-md shadow-brand-400/30">
+<span class="material-symbols-outlined text-[24px]">savings</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-xl font-bold tracking-tight text-plum">轻记</span>
+<span class="text-sm font-medium text-plum-muted/80">· 个人中心与设置</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-1 bg-white/70 p-1.5 rounded-full border border-plum-border/60 shadow-sm">
+<a class="px-5 py-2 rounded-full text-sm font-medium text-plum-muted hover:text-plum hover:bg-brand-50 transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+          明细
+        </a>
+<a class="px-5 py-2 rounded-full text-sm font-medium text-plum-muted hover:text-plum hover:bg-brand-50 transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[18px]">bar_chart</span>
+          统计
+        </a>
+<a class="px-5 py-2 rounded-full text-sm font-semibold text-white bg-brand-600 shadow-sm flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined fill text-[18px]">person</span>
+          我的
+        </a>
+</nav>
+<!-- Right Header Actions (Month Selector & Profile Pill) -->
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-plum-border text-sm font-medium text-plum hover:border-brand-300 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-brand-600">calendar_month</span>
+<span>10月</span>
+<span class="material-symbols-outlined text-[16px] text-plum-light">expand_more</span>
+</button>
+<div class="flex items-center gap-2.5 pl-2">
+<div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-100 to-brand-200 border-2 border-white flex items-center justify-center text-brand-700 font-bold text-sm shadow-sm ring-1 ring-brand-200">
+            小
+          </div>
+<span class="font-semibold text-sm text-plum hidden sm:inline">@xiaolin</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Container -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-6 sm:px-8 py-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: User Profile & Quick Nav (4 cols) -->
+<aside class="lg:col-span-4 flex flex-col gap-6">
+<!-- Profile Card -->
+<div class="bg-white rounded-3xl p-8 border border-white shadow-[0_12px_40px_rgba(232,97,147,0.06)] relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-brand-50 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-center gap-4 mb-6">
+<div class="relative">
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-brand-300 flex items-center justify-center text-white shadow-lg shadow-brand-500/25">
+<span class="material-symbols-outlined fill text-[36px]">face_3</span>
+</div>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
+
+</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-xl font-bold text-plum">@xiaolin</h2>
+<span class="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide bg-gradient-to-r from-brand-100 to-brand-200 text-brand-700">Pro</span>
+</div>
+<p class="text-xs text-plum-muted mt-1 font-medium">注册于 2027-03-01</p>
+</div>
+</div>
+<div class="pt-5 border-t border-plum-border/60 flex items-center justify-between">
+
+
+</div>
+</div>
+<!-- Privacy & Local Security Notice Banner -->
+<div class="bg-gradient-to-br from-brand-50/90 to-white rounded-3xl p-6 border border-plum-border/60 shadow-[0_8px_30px_rgba(232,97,147,0.04)] flex items-start gap-3.5">
+<div class="w-9 h-9 rounded-xl bg-brand-100/80 text-brand-600 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-plum mb-1">隐私安全承诺</h4>
+<p class="text-xs leading-relaxed text-plum-muted">
+              登录不等于云同步，换设备或清缓存后请通过备份恢复。您的账单数据仅保存在本机 IndexedDB。
+            </p>
+</div>
+</div>
+<!-- Navigation Tabs Card -->
+<div class="bg-white rounded-3xl p-6 border border-white shadow-[0_12px_40px_rgba(232,97,147,0.06)] hidden lg:block">
+<h3 class="text-xs font-bold text-plum-muted uppercase tracking-wider px-3 mb-3">快捷导航</h3>
+<div class="space-y-1.5">
+<a class="flex items-center justify-between px-4 py-3 rounded-2xl text-plum-muted hover:text-plum hover:bg-brand-50/80 transition-all group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-plum-light group-hover:text-brand-600 transition-colors">receipt_long</span>
+<span class="text-sm font-medium">明细账单</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-plum-light/50 group-hover:translate-x-0.5 transition-all">chevron_right</span>
+</a>
+<a class="flex items-center justify-between px-4 py-3 rounded-2xl text-plum-muted hover:text-plum hover:bg-brand-50/80 transition-all group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-plum-light group-hover:text-brand-600 transition-colors">bar_chart</span>
+<span class="text-sm font-medium">统计图表</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-plum-light/50 group-hover:translate-x-0.5 transition-all">chevron_right</span>
+</a>
+<div class="flex items-center justify-between px-4 py-3 rounded-2xl bg-brand-50 text-brand-700 font-semibold shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined fill text-[20px] text-brand-600">manage_accounts</span>
+<span class="text-sm">个人与设置</span>
+</div>
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Right Column: Settings Sections (8 cols) -->
+<section class="lg:col-span-8 flex flex-col gap-6">
+<!-- 1. 账号与安全 -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 px-3">
+<span class="w-1.5 h-4 rounded-full bg-brand-600"></span>
+<h3 class="text-base font-bold text-plum">账号与安全</h3>
+</div>
+<div class="bg-white rounded-3xl p-8 border border-white shadow-[0_12px_40px_rgba(232,97,147,0.06)] divide-y divide-plum-border/50">
+<!-- Row: 修改密码 -->
+<button class="w-full pb-6 flex items-center justify-between hover:opacity-85 transition-opacity text-left group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
+<span class="material-symbols-outlined text-[22px]">lock_reset</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-plum">修改密码</div>
+<div class="text-xs text-plum-muted mt-0.5">定期更换密码保护本地账户</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-brand-400 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+</button>
+<!-- Row: 恢复码与找回 -->
+
+<!-- Row: 退出登录 -->
+<button class="w-full pt-6 flex items-center justify-between hover:opacity-85 transition-opacity text-left group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 group-hover:bg-rose-100 transition-colors">
+<span class="material-symbols-outlined text-[22px]">logout</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-rose-600">退出登录</div>
+<div class="text-xs text-plum-muted mt-0.5">退出后本机账单仍保留，重新验证即可进入</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-rose-400 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+</button>
+</div>
+</div>
+<!-- 2. 数据与备份 -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 px-3">
+<span class="w-1.5 h-4 rounded-full bg-brand-600"></span>
+<h3 class="text-base font-bold text-plum">数据与备份</h3>
+</div>
+<div class="bg-white rounded-3xl p-8 border border-white shadow-[0_12px_40px_rgba(232,97,147,0.06)] divide-y divide-plum-border/50">
+<!-- Row: 导出完整备份 -->
+<button class="w-full pb-6 flex items-center justify-between hover:opacity-85 transition-opacity text-left group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
+<span class="material-symbols-outlined text-[22px]">data_object</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-plum">导出完整备份</div>
+<div class="text-xs text-plum-muted mt-0.5">JSON 格式 · 包含所有账本与分类映射</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-brand-400 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+</button>
+<!-- Row: 导入数据恢复 -->
+
+<!-- Row: CSV 账单导出 -->
+
+<!-- Row: 存储状态与持久化 -->
+<div class="w-full pt-6 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600">
+<span class="material-symbols-outlined text-[22px]">database</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-plum">存储状态与持久化</div>
+<div class="text-xs text-emerald-600 font-medium mt-0.5">已用 2.4 MB / IndexedDB (健康)</div>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">良好</span>
+</div>
+</div>
+</div>
+<!-- 3. 其他设置 -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 px-3">
+<span class="w-1.5 h-4 rounded-full bg-brand-600"></span>
+<h3 class="text-base font-bold text-plum">其他设置</h3>
+</div>
+<div class="bg-white rounded-3xl p-8 border border-white shadow-[0_12px_40px_rgba(232,97,147,0.06)] divide-y divide-plum-border/50">
+<!-- Row: 隐私模式开关 -->
+<div class="w-full pb-6 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600">
+<span class="material-symbols-outlined text-[22px]">visibility_off</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-plum">隐私模式开关</div>
+<div class="text-xs text-plum-muted mt-0.5">自动隐藏金额数字以保护隐私</div>
+</div>
+</div>
+<!-- Soft Pink Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" id="privacy-toggle" type="checkbox">
+<div class="w-12 h-7 bg-plum-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all after:shadow-sm peer-checked:bg-brand-600"></div>
+</label>
+</div>
+<!-- Row: 清除本地数据 -->
+<button class="w-full pt-6 flex items-center justify-between hover:opacity-85 transition-opacity text-left group" onclick="showClearDataModal()">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 group-hover:bg-rose-100 transition-colors">
+<span class="material-symbols-outlined text-[22px]">delete_sweep</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-rose-600">清除本地数据</div>
+<div class="text-xs text-plum-muted mt-0.5">重置所有记账与缓存 · 不可撤销</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-rose-400 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+</button>
+</div>
+</div>
+<!-- Footer / Version Info -->
+<footer class="pt-4 pb-12 flex flex-col items-center justify-center text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 border border-plum-border/50 text-xs text-plum-muted font-medium mb-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+            轻记 QingJi v2.5.0 (Desktop Pro Edition)
+          </div>
+<p class="text-xs text-plum-light tracking-wide">Make expense tracking a delightful daily ritual.</p>
+</footer>
+</section>
+</div>
+</main>
+<!-- Floating Add Button -->
+<button class="fixed right-8 bottom-8 z-40 w-14 h-14 rounded-full bg-brand-600 hover:bg-brand-700 text-white shadow-[0_8px_24px_rgba(197,70,119,0.35)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all" title="快速记一笔">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<script>
+    const toggle = document.getElementById('privacy-toggle');
+    toggle.addEventListener('change', function() {
+      if(this.checked) {
+        console.log("隐私模式已开启：金额打码保护");
+      } else {
+        console.log("隐私模式已关闭");
+      }
+    });
+
+    function showClearDataModal() {
+      alert("安全提示：清除本地数据将清空当前浏览器的所有离线记账记录，操作不可逆。建议操作前先导出完整 JSON 备份！");
+    }
+  </script>
+
+
+
+
+</body></html>
