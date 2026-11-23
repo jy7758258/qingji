@@ -23,7 +23,7 @@
 
       <div class="info-banner">
         <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shield"></use></svg>
-        <span><strong>账目只存在当前浏览器。</strong>建议每周导出一次完整备份。登录不会把账目同步到其他设备；换设备请先导出，再在新设备导入。备份中不包含密码、恢复码和会话。</span>
+        <span><strong>账目保存在项目本地 MySQL 数据库。</strong>登录不会把账目同步到其他设备；完整的导出/导入和清除接口仍待接入，当前相关按钮为演示交互。</span>
       </div>
 
       <div class="backup-status"><span class="dot"></span><span>当前为原型演示：导出与导入暂不生成真实文件</span></div>
@@ -32,10 +32,10 @@
         <section class="card storage-card" aria-labelledby="storage-title">
           <div class="storage-card__head">
             <span class="category-icon category-icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg></span>
-            <div><h2 id="storage-title">本地账本</h2><span>当前浏览器 · 仅本机可见</span></div>
+            <div><h2 id="storage-title">账号账本</h2><span>MySQL · 按账号隔离</span></div>
             <span class="pill pill--green" style="margin-left:auto">正常</span>
           </div>
-          <div class="storage-foot" style="margin-top:12px"><span>账目 <strong data-tx-count>0 笔</strong></span><span>分类 19 个</span></div>
+          <div class="storage-foot" style="margin-top:12px"><span>本月账目 <strong data-tx-count>0 笔</strong></span><span>分类由数据库提供</span></div>
           <button class="btn btn--soft btn--sm" style="margin-top:12px" type="button" data-action="persist-storage">申请持久存储</button>
         </section>
 
@@ -88,9 +88,9 @@
       </section>
 
       <div class="danger-zone">
-        <h3>清除当前账号的本地数据</h3>
-        <p>会删除当前账号的所有账目并恢复默认分类，不会注销账号。操作不可撤销，清除前请先导出备份。</p>
-        <button class="btn btn--danger btn--sm" type="button" data-action="clear-data">清除数据</button>
+        <h3>清除本地缓存</h3>
+        <p>当前仅清理浏览器偏好与缓存，不会删除 MySQL 中的账目；完整的删除账目接口待接入。</p>
+        <button class="btn btn--danger btn--sm" type="button" data-action="clear-cache">清除缓存</button>
       </div>
     </div>
   </main>
@@ -101,6 +101,7 @@
   <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
 
   <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ledger.js" defer></script>
   <script src="assets/js/layout.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>

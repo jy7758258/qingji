@@ -97,6 +97,7 @@
   });
   CATEGORY_META['饮品'] = { name: '饮品', icon: 'coffee', tone: 'rose' };
   CATEGORY_META['打车'] = { name: '打车', icon: 'train', tone: 'blue' };
+  CATEGORY_META['餐饮'] = { name: '餐饮', icon: 'bowl', tone: 'amber' };
 
   function authUser() { return window.QJAuth ? window.QJAuth.currentUser() : null; }
   function transactionStorageKey() {
@@ -280,14 +281,23 @@
 
   /* ---------------- 搜索 ---------------- */
 
-  function openSearch() {
-    const entries = readTransactions().map(function (tx) {
+  async function openSearch() {
+    let source = [];
+    try {
+      const fromDate = new Date();
+      fromDate.setFullYear(fromDate.getFullYear() - 1);
+      source = await window.QJLedger.listRange(dateKeyOf(fromDate), todayKey());
+    } catch (error) {
+      console.error(error);
+      showToast('搜索数据加载失败，请检查后端服务', 'info');
+    }
+    const entries = source.map(function (tx) {
       const meta = categoryMeta(tx.category);
       return {
         title: tx.note || tx.category,
         meta: tx.category + ' · ' + dateDisplay(tx.date) + ' ' + timeDisplay(tx.createdAt),
         amount: transactionAmount(tx),
-        icon: meta.icon,
+        icon: tx.categoryIcon || meta.icon,
         tone: meta.tone
       };
     });
@@ -375,6 +385,27 @@
     }
   }
 
+  function showRecoveryCodeModal(code) {
+    openModal({
+      title: '请保存恢复码',
+      body: '<p class="modal__note">这是忘记密码时唯一的自助找回凭证。请立即复制或保存到安全的位置；关闭后不会再次显示。</p>' +
+        '<div class="code-box"><span>' + esc(code) + '</span><button class="icon-button" type="button" data-copy-recovery aria-label="复制恢复码">' + icon('copy') + '</button></div>' +
+        '<p class="form-hint">账号已经创建并登录。保存后即可进入账本。</p>',
+      footer: '<button class="btn btn--primary" type="button" id="recovery-done">我已保存，进入账本</button>',
+      onMount: function (root) {
+        $('[data-copy-recovery]', root).addEventListener('click', async function () {
+          const ok = await copyText(code);
+          showToast(ok ? '恢复码已复制' : '复制失败，请手动选择', ok ? 'check' : 'info');
+        });
+        $('#recovery-done', root).addEventListener('click', function () {
+          closeModal();
+          setFlash('注册成功，已创建账号。', 'check');
+          window.location.href = 'index.html';
+        });
+      }
+    });
+  }
+
   function initCommonActions() {
     document.addEventListener('click', function (event) {
       const toastEl = event.target.closest('[data-toast]');
@@ -392,23 +423,29 @@
           title: '退出登录？',
           message: '退出后本机账本仍会保留，重新登录即可继续使用。当前是原型演示，不会发送真实退出请求。',
           confirmLabel: '退出登录',
-          onConfirm: function () {
-            if (window.QJAuth) window.QJAuth.logout();
+          onConfirm: async function () {
+            try {
+              if (window.QJAuth) await window.QJAuth.logout();
+            } catch (e) { /* 即使请求失败也清理本地展示态 */ }
             setFlash('已退出登录，本机账本仍保留。', 'info');
             window.location.href = 'login.html';
           }
         });
         return;
       }
-      if (action === 'clear-data') {
+      if (action === 'clear-data' || action === 'clear-cache') {
         confirmDialog({
-          title: '清除本地数据？',
-          message: '这会删除所有示例账目并恢复默认分类，操作不可撤销。请先确认已经导出备份。',
-          confirmLabel: '清除数据',
+          title: '清除本地缓存？',
+          message: '当前只会清理浏览器偏好和缓存，不会删除 MySQL 中的账目。完整的账目删除接口仍待接入。',
+          confirmLabel: '清理缓存',
           danger: true,
           onConfirm: function () {
-            clearTransactions();
-            showToast('本地账本已清除（原型演示）', 'info');
+            try {
+              localStorage.removeItem('qingji_demo_privacy');
+              localStorage.removeItem('qingji_demo_backup_reminder');
+              sessionStorage.removeItem('qingji_draft');
+            } catch (e) { /* ignore */ }
+            showToast('本地缓存已清理，数据库账目仍保留', 'info');
           }
         });
         return;
@@ -417,13 +454,10 @@
         confirmDialog({
           title: '注销账号？',
           message: '注销后账号无法恢复。本机账本可选择保留或一并删除。当前原型不会执行真实删除。',
-          confirmLabel: '注销账号',
+          confirmLabel: '知道了',
           danger: true,
           onConfirm: function () {
-            clearTransactions();
-            if (window.QJAuth) window.QJAuth.deleteAccount();
-            setFlash('账号已注销（原型演示）', 'info');
-            window.location.href = 'login.html';
+            showToast('账号注销接口暂未开放，请联系管理员处理', 'info');
           }
         });
         return;
@@ -477,11 +511,11 @@
     return name === '其他' ? '#C9BBC1' : (CATEGORY_COLORS[name] || CHART_FALLBACK[index % CHART_FALLBACK.length]);
   }
 
-  function buildStatsData(type, view) {
+  function buildStatsData(type, view, source) {
     const now = new Date();
     const month = currentMonthKey();
     const year = String(now.getFullYear());
-    const allOfType = readTransactions().filter(function (tx) { return tx.type === type; });
+    const allOfType = (source || []).filter(function (tx) { return tx.type === type; });
     const periodTxs = view === 'year'
       ? allOfType.filter(function (tx) { return String(tx.date).slice(0, 4) === year; })
       : allOfType.filter(function (tx) { return monthKeyFromDate(tx.date) === month; });
@@ -566,14 +600,38 @@
 
   function initStats() {
     const state = { view: 'month', type: 'expense' };
-    const render = function () {
-      const data = buildStatsData(state.type, state.view);
+    let source = [];
+    let loaded = false;
+    let loading = null;
+
+    async function ensureSource() {
+      if (loaded) return;
+      if (loading) return loading;
+      loading = (async function () {
+        const now = new Date();
+        const from = (now.getFullYear() - 1) + '-01-01';
+        const to = now.getFullYear() + '-12-31';
+        try {
+          source = await window.QJLedger.listRange(from, to);
+        } catch (error) {
+          console.error(error);
+          showToast('统计数据加载失败，请检查后端服务', 'info');
+        }
+        loaded = true;
+        loading = null;
+      })();
+      return loading;
+    }
+
+    const render = async function () {
+      await ensureSource();
+      const data = buildStatsData(state.type, state.view, source);
       const typeLabel = data.typeLabel;
       const viewLabel = state.view === 'month' ? '月度' : '年度';
       const periodLabel = $('[data-period-label]');
       if (periodLabel) periodLabel.textContent = data.label;
       const pagePeriod = $('[data-page-period]');
-      if (pagePeriod) pagePeriod.textContent = '本地账本 · ' + data.label;
+      if (pagePeriod) pagePeriod.textContent = '账本数据库 · ' + data.label;
       const totalEl = $('[data-stat-total]');
       if (totalEl) totalEl.textContent = fmt(data.total);
       const deltaEl = $('[data-stat-delta]');
@@ -624,13 +682,13 @@
         button.setAttribute('aria-pressed', String(on));
       });
       const viewNote = $('[data-stats-view-note]');
-      if (viewNote) viewNote.textContent = viewLabel + '视图 · 本地账本';
+      if (viewNote) viewNote.textContent = viewLabel + '视图 · 本地数据库';
     };
     $$('[data-stats-view]').forEach(function (button) {
-      button.addEventListener('click', function () { state.view = button.dataset.statsView; render(); });
+      button.addEventListener('click', async function () { state.view = button.dataset.statsView; await render(); });
     });
     $$('[data-stats-type]').forEach(function (button) {
-      button.addEventListener('click', function () { state.type = button.dataset.statsType; render(); });
+      button.addEventListener('click', async function () { state.type = button.dataset.statsType; await render(); });
     });
     render();
   }
@@ -695,12 +753,23 @@
 
   /* ---------------- 明细 / 记账 ---------------- */
 
-  function initHome() {
+  async function initHome() {
     const todayLabel = $('[data-today-label]');
     if (todayLabel) todayLabel.textContent = pageTodayLabel();
 
     const month = currentMonthKey();
-    const all = readTransactions().filter(function (tx) { return monthKeyFromDate(tx.date) === month; });
+    let all = [];
+    let previous = 0;
+    try {
+      all = await window.QJLedger.listMonth(month);
+      const prevMonth = previousMonthKey(month);
+      const prevTransactions = await window.QJLedger.listMonth(prevMonth);
+      previous = totalCents(prevTransactions.filter(function (tx) { return tx.type === 'expense'; }));
+    } catch (error) {
+      console.error(error);
+      showToast('账目加载失败，请检查后端服务', 'info');
+    }
+
     const expenses = all.filter(function (tx) { return tx.type === 'expense'; });
     const incomes = all.filter(function (tx) { return tx.type === 'income'; });
     const expense = totalCents(expenses);
@@ -726,17 +795,14 @@
       if (!expenses.length) {
         deltaEl.className = 'delta';
         deltaEl.textContent = '还没有支出';
+      } else if (!previous) {
+        deltaEl.className = 'delta';
+        deltaEl.textContent = '本月开始';
       } else {
-        const previous = previousMonthExpense();
-        if (!previous) {
-          deltaEl.className = 'delta';
-          deltaEl.textContent = '本月开始';
-        } else {
-          const pct = Math.round(((expense - previous) / previous) * 100);
-          const down = pct < 0;
-          deltaEl.className = 'delta' + (down ? ' delta--down' : '');
-          deltaEl.innerHTML = icon(down ? 'trending-down' : 'trending-up', 'icon--sm') + (down ? '' : '+') + pct + '%';
-        }
+        const pct = Math.round(((expense - previous) / previous) * 100);
+        const down = pct < 0;
+        deltaEl.className = 'delta' + (down ? ' delta--down' : '');
+        deltaEl.innerHTML = icon(down ? 'trending-down' : 'trending-up', 'icon--sm') + (down ? '' : '+') + pct + '%';
       }
     }
 
@@ -756,12 +822,12 @@
       } else {
         categoryCard.hidden = false;
         categoryList.innerHTML = categories.slice(0, 4).map(function (item, index) {
-          const meta = categoryMeta(item.name);
           const pct = expense ? Math.round(item.value / expense * 100) : 0;
+          const color = colorFor(item.name, index);
           return '<div class="home-category-row">' +
-            '<span class="home-category-row__dot" style="background:' + colorFor(item.name, index) + '"></span>' +
+            '<span class="home-category-row__dot" style="background:' + color + '"></span>' +
             '<span class="home-category-row__name">' + esc(item.name) + '</span>' +
-            '<span class="home-category-row__bar"><span style="width:' + Math.max(3, pct) + '%;background:' + colorFor(item.name, index) + '"></span></span>' +
+            '<span class="home-category-row__bar"><span style="width:' + Math.max(3, pct) + '%;background:' + color + '"></span></span>' +
             '<span class="home-category-row__pct">' + pct + '%</span></div>';
         }).join('');
       }
@@ -789,7 +855,7 @@
         const title = tx.note ? tx.note : tx.category;
         const tag = tx.note ? '<span class="tag">' + esc(tx.category) + '</span>' : '<span class="tag">' + (tx.type === 'income' ? '收入' : '支出') + '</span>';
         return '<div class="transaction">' +
-          '<span class="category-icon category-icon--' + meta.tone + '">' + icon(meta.icon) + '</span>' +
+          '<span class="category-icon category-icon--' + meta.tone + '">' + icon(tx.categoryIcon || meta.icon) + '</span>' +
           '<span class="transaction__copy"><span class="transaction__title">' + esc(title) + ' ' + tag + '</span>' +
           '<span class="transaction__meta"><span>' + (tx.type === 'income' ? '收入' : '支出') + '</span><span>·</span><span>' + timeDisplay(tx.createdAt) + '</span></span></span>' +
           '<span class="transaction__amount' + (tx.type === 'income' ? ' transaction__amount--income' : '') + '">' + transactionAmount(tx) + '<small>' + (tx.type === 'income' ? '收入' : '日常支出') + '</small></span>' +
@@ -801,7 +867,7 @@
     }).join('');
   }
 
-  function initRecord() {
+  async function initRecord() {
     const form = $('#record-form');
     if (!form) return;
     const amount = $('#record-amount');
@@ -813,9 +879,22 @@
     const recentEl = $('#recent-categories');
     const gridEl = $('#category-grid');
     let currentType = 'expense';
-    let currentCategory = EXPENSE_CATEGORIES[0].name;
+    let categories = [];
+    let monthTransactions = [];
+    let currentCategory = null;
+    let saving = false;
 
-    if (dateInput && !dateInput.value) dateInput.value = todayKey();
+    if (dateInput) dateInput.value = todayKey();
+
+    try {
+      categories = await window.QJLedger.listCategories();
+      monthTransactions = await window.QJLedger.listMonth(currentMonthKey());
+    } catch (e) {
+      console.error(e);
+      showToast('分类或账目加载失败，请检查后端服务', 'info');
+    }
+    const firstCategory = categories.find(function (c) { return c.type === 'expense'; }) || null;
+    currentCategory = firstCategory;
 
     const cleanAmount = function (value) {
       let text = String(value || '').replace(/[^\d.]/g, '');
@@ -827,31 +906,49 @@
       return integer + (parts.length > 1 ? '.' + decimal : '');
     };
 
+    function categoryList(type) {
+      return categories.filter(function (c) { return c.type === type; });
+    }
+
+    function categoryIcon(category) {
+      const meta = categoryMeta(category.name);
+      return '<span class="category-icon category-icon--' + meta.tone + '">' + icon(category.icon || meta.icon) + '</span>';
+    }
+
     function renderCategories() {
-      const list = currentType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+      const list = categoryList(currentType);
+      if (!currentCategory || currentCategory.type !== currentType) {
+        currentCategory = list[0] || null;
+      }
       const recent = list.slice(0, 5);
       const rest = list.slice(5);
       if (recentEl) recentEl.innerHTML = recent.map(function (item) {
-        return '<button class="chip-button' + (item.name === currentCategory ? ' is-selected' : '') + '" type="button" data-category="' + esc(item.name) + '">' + icon(item.icon, 'icon--sm') + esc(item.name) + '</button>';
+        return '<button class="chip-button' + (currentCategory && item.id === currentCategory.id ? ' is-selected' : '') + '" type="button" data-category-id="' + esc(item.id) + '">' +
+          icon(item.icon, 'icon--sm') + esc(item.name) + '</button>';
       }).join('');
       if (gridEl) gridEl.innerHTML = rest.map(function (item) {
-        return '<button class="category-option' + (item.name === currentCategory ? ' is-selected' : '') + '" type="button" data-category="' + esc(item.name) + '">' +
-          '<span class="category-icon category-icon--' + item.tone + '">' + icon(item.icon) + '</span>' + esc(item.name) + '</button>';
+        return '<button class="category-option' + (currentCategory && item.id === currentCategory.id ? ' is-selected' : '') + '" type="button" data-category-id="' + esc(item.id) + '">' +
+          categoryIcon(item) + esc(item.name) + '</button>';
       }).join('');
-      if (selectedLabel) selectedLabel.textContent = currentCategory;
+      if (!list.length) {
+        if (gridEl) gridEl.innerHTML = '<p class="hint">没有可用分类，请先在分类管理中创建。</p>';
+      }
+      if (selectedLabel) selectedLabel.textContent = currentCategory ? currentCategory.name : '未选择';
       if (typeLabel) typeLabel.textContent = currentType === 'income' ? '收入' : '支出';
     }
 
-    function setCategory(name) {
-      currentCategory = name;
-      $$('[data-category]').forEach(function (button) {
-        button.classList.toggle('is-selected', button.dataset.category === currentCategory);
+    function setCategory(id) {
+      const next = categories.find(function (c) { return c.id === id && c.type === currentType; });
+      if (!next) return;
+      currentCategory = next;
+      $$('[data-category-id]').forEach(function (button) {
+        button.classList.toggle('is-selected', button.dataset.categoryId === currentCategory.id);
       });
-      if (selectedLabel) selectedLabel.textContent = currentCategory;
+      if (selectedLabel) selectedLabel.textContent = currentCategory.name;
     }
 
     function renderMonthSummary() {
-      const list = readTransactions().filter(function (tx) { return monthKeyFromDate(tx.date) === currentMonthKey(); });
+      const list = monthTransactions;
       const expense = totalCents(list.filter(function (tx) { return tx.type === 'expense'; }));
       const income = totalCents(list.filter(function (tx) { return tx.type === 'income'; }));
       const expenseEl = $('#record-month-expense');
@@ -864,7 +961,8 @@
 
     function renderToday() {
       const today = todayKey();
-      const list = readTransactions().filter(function (tx) { return tx.date === today; }).sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
+      const list = monthTransactions.filter(function (tx) { return tx.date === today; })
+        .sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
       const total = totalCents(list.filter(function (tx) { return tx.type === 'expense'; }));
       const summary = $('#today-summary');
       if (summary) summary.textContent = list.length ? '共 ' + list.length + ' 笔 · 支出 ' + fmt(total) : '今天还没有记录';
@@ -873,7 +971,7 @@
       host.innerHTML = list.length ? list.map(function (tx) {
         const meta = categoryMeta(tx.category);
         return '<div class="today-item">' +
-          '<span class="category-icon category-icon--' + meta.tone + ' category-icon--sm">' + icon(meta.icon) + '</span>' +
+          '<span class="category-icon category-icon--' + meta.tone + ' category-icon--sm">' + icon(tx.categoryIcon || meta.icon) + '</span>' +
           '<span class="today-item__copy"><span class="today-item__title">' + esc(tx.note || tx.category) + '</span><span class="today-item__meta">' + timeDisplay(tx.createdAt) + ' · ' + esc(tx.category) + '</span></span>' +
           '<span class="today-item__amount' + (tx.type === 'income' ? ' is-income' : '') + '">' + transactionAmount(tx) + '</span></div>';
       }).join('') : '<div class="today-empty">今天还没有记录，记下第一笔吧。</div>';
@@ -900,18 +998,19 @@
           b.setAttribute('aria-pressed', String(b === button));
         });
         currentType = button.dataset.recordType;
-        currentCategory = (currentType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)[0].name;
+        currentCategory = categoryList(currentType)[0] || null;
         renderCategories();
       });
     });
 
     form.addEventListener('click', function (event) {
-      const button = event.target.closest('[data-category]');
-      if (button) setCategory(button.dataset.category);
+      const button = event.target.closest('[data-category-id]');
+      if (button) setCategory(button.dataset.categoryId);
     });
 
-    form.addEventListener('submit', function (event) {
+    form.addEventListener('submit', async function (event) {
       event.preventDefault();
+      if (saving) return;
       const value = parseFloat(amount.value);
       if (!value || value <= 0) {
         error.textContent = '先输入一个金额吧';
@@ -919,28 +1018,45 @@
         amount.focus();
         return;
       }
-      const date = dateInput && parseDateKey(dateInput.value) ? dateInput.value : todayKey();
-      addTransaction({
-        id: 'tx-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
-        type: currentType,
-        amountCents: Math.round(value * 100),
-        category: currentCategory,
-        note: note ? note.value.trim().slice(0, 200) : '',
-        date: date,
-        createdAt: Date.now()
-      });
-      renderToday();
-      renderMonthSummary();
-      const saveAgain = $('#save-again');
-      if (saveAgain && saveAgain.checked) {
-        showToast('已记 ' + (currentType === 'income' ? '+' : '−') + fmt(Math.round(value * 100)) + ' · ' + currentCategory + '，继续记录', 'check');
-        amount.value = '';
-        if (note) note.value = '';
-        amount.focus();
+      if (!currentCategory) {
+        error.textContent = '请选择一个分类';
+        error.hidden = false;
         return;
       }
-      setFlash('已记 ' + (currentType === 'income' ? '+' : '−') + fmt(Math.round(value * 100)) + ' · ' + currentCategory, 'check');
-      window.location.href = 'index.html';
+      const date = dateInput && parseDateKey(dateInput.value) ? dateInput.value : todayKey();
+      saving = true;
+      const submit = form.querySelector('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      try {
+        const saved = await window.QJLedger.createTransaction({
+          type: currentType,
+          amountCents: Math.round(value * 100),
+          categoryId: currentCategory.id,
+          note: note ? note.value.trim().slice(0, 200) : '',
+          occurredOn: date
+        });
+        monthTransactions.unshift(saved);
+        renderToday();
+        renderMonthSummary();
+        const saveAgain = $('#save-again');
+        if (saveAgain && saveAgain.checked) {
+          showToast('已记 ' + transactionAmount(saved) + ' · ' + saved.category + '，继续记录', 'check');
+          amount.value = '';
+          if (note) note.value = '';
+          saving = false;
+          if (submit) submit.disabled = false;
+          amount.focus();
+          return;
+        }
+        setFlash('已记 ' + transactionAmount(saved) + ' · ' + saved.category, 'check');
+        window.location.href = 'index.html';
+      } catch (e) {
+        console.error(e);
+        error.textContent = e.message || '保存失败，请稍后再试';
+        error.hidden = false;
+        saving = false;
+        if (submit) submit.disabled = false;
+      }
     });
 
     renderCategories();
@@ -963,9 +1079,16 @@
 
   /* ---------------- 数据页 ---------------- */
 
-  function initData() {
+  async function initData() {
     const txCount = $('[data-tx-count]');
-    if (txCount) txCount.textContent = readTransactions().length + ' 笔';
+    if (txCount) {
+      try {
+        const list = await window.QJLedger.listMonth(currentMonthKey());
+        txCount.textContent = list.length + ' 笔';
+      } catch (e) {
+        txCount.textContent = '—';
+      }
+    }
     const reminder = $('#backup-reminder');
     if (reminder) {
       try { reminder.checked = localStorage.getItem('qingji_demo_backup_reminder') !== '0'; } catch (e) { /* ignore */ }
@@ -1004,21 +1127,11 @@
   }
 
   function openRecoveryCode() {
-    const user = window.QJAuth ? window.QJAuth.currentUser() : null;
-    const code = user && user.recoveryCode ? user.recoveryCode : '未生成';
     openModal({
       title: '恢复码',
-      body: '<p class="modal__note">恢复码是忘记密码时唯一的自助找回凭证。请把它保存在安全的地方。</p>' +
-        '<div class="code-box"><span>' + esc(code) + '</span><button class="icon-button" type="button" data-copy-code aria-label="复制恢复码"' + (code === '未生成' ? ' disabled' : '') + '>' + icon('copy') + '</button></div>' +
-        '<p class="form-hint">原型演示中可在此查看；正式版本只在注册成功时显示一次，重新生成会使旧码失效。</p>',
-      onMount: function (root) {
-        const button = $('[data-copy-code]', root);
-        if (!button || button.disabled) return;
-        button.addEventListener('click', async function () {
-          const ok = await copyText(code);
-          showToast(ok ? '恢复码已复制' : '复制失败，请手动选择', ok ? 'check' : 'info');
-        });
-      }
+      body: '<p class="modal__note">恢复码只在注册成功时显示一次，服务端只保存哈希，无法再次返回明文。</p>' +
+        '<p class="form-hint">如果你没有保存恢复码，当前版本无法自助找回账号；请联系项目管理员协助处理。</p>',
+      footer: '<button class="btn btn--primary" type="button" data-modal-close>知道了</button>'
     });
   }
 
@@ -1215,9 +1328,13 @@
         submit.disabled = true;
         submit.textContent = '正在创建…';
         try {
-          const user = await window.QJAuth.register($('#register-username').value, $('#register-password').value);
-          setFlash('注册成功，@' + user.username + '。恢复码可在「账号与安全」查看（原型演示）。', 'check');
-          window.location.href = 'index.html';
+          const result = await window.QJAuth.register($('#register-username').value, $('#register-password').value);
+          if (result && result.recoveryCode) {
+            showRecoveryCodeModal(result.recoveryCode);
+          } else {
+            setFlash('注册成功，已创建账号。', 'check');
+            window.location.href = 'index.html';
+          }
         } catch (err) {
           error.textContent = err.message || '注册失败，请检查输入';
           error.hidden = false;

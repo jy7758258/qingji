@@ -58,7 +58,7 @@
       </form>
 
       <p class="auth-switch">已有账号？ <a href="login.html">立即登录</a></p>
-      <p class="auth-note">账号会临时保存在当前浏览器，密码以哈希形式保存。注册成功后会自动生成恢复码（原型演示）。</p>
+      <p class="auth-note">账号会写入本地 MySQL 数据库，密码以 Argon2id 哈希保存，注册成功后自动生成恢复码。</p>
     </section>
   </main>
 
@@ -68,6 +68,7 @@
   <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
 
   <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ledger.js" defer></script>
   <script src="assets/js/layout.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>

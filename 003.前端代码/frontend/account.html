@@ -32,7 +32,7 @@
 
       <div class="info-banner">
         <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-info"></use></svg>
-        <span><strong>登录不等于云同步。</strong>账号只用于身份与本地账本归属；换设备或清缓存后，仍需用备份恢复账目。当前页面为原型演示，不会连接真实认证服务。</span>
+        <span><strong>登录不等于云同步。</strong>账号只用于身份与账本归属；账目写入项目本地 MySQL 数据库，按账号隔离。换设备后仍需自行迁移数据。</span>
       </div>
 
       <section class="settings-section" aria-labelledby="account-info-title">
@@ -51,7 +51,7 @@
             </div>
             <div class="account-row">
               <span class="settings-row__icon settings-row__icon--green"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg></span>
-              <span class="account-row__copy"><span class="account-row__title">账本位置</span><span class="account-row__desc">IndexedDB · 仅当前浏览器</span></span>
+              <span class="account-row__copy"><span class="account-row__title">账本位置</span><span class="account-row__desc">MySQL · 按账号隔离</span></span>
               <span class="account-row__value">本机</span>
             </div>
           </div>
@@ -95,6 +95,7 @@
   <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
 
   <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ledger.js" defer></script>
   <script src="assets/js/layout.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>

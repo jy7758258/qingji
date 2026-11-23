@@ -123,11 +123,11 @@
     if (!host) return;
     if (layout === 'auth') {
       host.className = 'auth-foot';
-      host.innerHTML = '轻记 v1.1.1 · 前端交互原型<br>演示登录不连接真实认证服务，账号密码不会发送到服务器。';
+      host.innerHTML = '轻记 v1.1.1 · 前后端联调原型<br>账号认证由本地 Spring Boot 服务处理；请勿在公网明文传输密码。';
       return;
     }
     host.className = 'site-footer';
-    host.innerHTML = '<div class="footer-inner"><span>轻记 v1.1.1 · 前端原型 · 数据仅存本机</span>' +
+    host.innerHTML = '<div class="footer-inner"><span>轻记 v1.1.1 · 前端原型 · 账目保存在本地 MySQL</span>' +
       '<span class="footer-note">登录不等于云同步 · <a href="' + url('privacy.html') + '">隐私说明</a></span></div>';
   }
 

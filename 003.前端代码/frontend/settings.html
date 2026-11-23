@@ -33,7 +33,7 @@
           <span class="profile-main">
             <span class="profile-name"><span data-user-name>@xiaolin</span> <span class="pill pill--pink">账号</span></span>
             <span class="profile-meta">注册于 <span data-user-created>2026-03-01</span></span>
-            <span class="pill profile-chip">本地账本 · 未开启云同步</span>
+            <span class="pill profile-chip">本地 MySQL · 未开启云同步</span>
           </span>
         </a>
 
@@ -41,7 +41,7 @@
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shield"></use></svg>
           <div>
             <h3>隐私安全承诺</h3>
-            <p>登录不等于云同步。账目只保存在当前浏览器的 IndexedDB；换设备或清缓存后，请通过备份恢复。</p>
+            <p>登录不等于云同步。账目保存在项目本地 MySQL 数据库；换设备后仍需自行迁移数据。</p>
           </div>
         </section>
 
@@ -104,7 +104,7 @@
             </div>
             <button class="settings-row settings-row--danger" type="button" data-action="clear-data">
               <span class="settings-row__icon settings-row__icon--danger"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg></span>
-              <span class="settings-row__copy"><span class="settings-row__title">清除本地数据</span><span class="settings-row__desc">重置全部账目与缓存 · 不可撤销</span></span>
+              <span class="settings-row__copy"><span class="settings-row__title">清除本地缓存</span><span class="settings-row__desc">仅清理浏览器偏好与缓存 · 不删除数据库账目</span></span>
               <svg class="icon settings-row__chev" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-right"></use></svg>
             </button>
           </div>
@@ -122,6 +122,7 @@
   <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
 
   <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ledger.js" defer></script>
   <script src="assets/js/layout.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>

@@ -11,3 +11,7 @@ TEMP（可删除）/
 node_modules/
 dist/
 build/
+
+# Java build output
+target/
+*.jar

@@ -33,46 +33,71 @@
 - `privacy.html` 公开，可从注册页直接查看。
 - `next` 只接受白名单页面，防止开放重定向。
 
-## 3. 本地演示认证
+## 3. 后端认证
 
-> 仅原型使用；生产必须替换为服务端认证。
+认证由 `../backend` 的 Spring Boot API 提供，数据库为 MySQL 的 `identity_*` 表。
 
 ```text
 注册
-  ├─ 校验用户名（2–20 位，中文/字母/数字/下划线）
+  ├─ 前端 POST /api/auth/register
+  ├─ 后端校验用户名（2–20 位，中文/字母/数字/下划线）
   ├─ 校验密码（8–64 位，字母 + 数字）
-  ├─ 生成随机盐 + PBKDF2-SHA256 密码哈希
-  ├─ 生成 16 位恢复码
-  ├─ 写入 localStorage: qingji_demo_accounts_v1
-  └─ 创建 30 天会话 → 进入明细
+  ├─ 生成 Argon2id 密码哈希与恢复码哈希
+  ├─ 写入 identity_users + identity_recovery_codes
+  └─ 创建 identity_sessions，Set-Cookie: QJ_SESSION（HttpOnly）→ 进入明细
 
 登录
-  ├─ 用户名 NFKC / 去空格 / 不区分大小写匹配
-  ├─ 使用保存的盐重新派生密码哈希并比较
-  ├─ 成功：写入 qingji_demo_session_v1 → next 或明细
-  └─ 失败：统一提示「用户名或密码不正确」
+  ├─ 前端 POST /api/auth/login
+  ├─ 后端按 username_key 匹配账号并校验 Argon2id
+  ├─ 失败：identity_auth_attempts 记录；15 分钟 5 次失败后返回 429
+  ├─ 成功：更新 last_login_at，创建 30 天会话
+  └─ 返回公开 user，前端缓存用于头像/用户名展示
+
+刷新 / 进入页面
+  ├─ auth.js 调用 GET /api/auth/me（credentials: include）
+  ├─ 200 → 渲染页面
+  └─ 401 → 清理公开用户缓存并跳转 login.html?next=...
 
 退出
-  └─ 删除会话，保留账号与本地账本
+  └─ POST /api/auth/logout → 后端吊销当前会话，清除 Cookie
 
 找回密码
-  ├─ 用户名 + 恢复码 + 新密码
-  ├─ 恢复码不匹配 → 统一错误
-  └─ 更新密码哈希并清除会话 → 回到登录
-
-注销
-  └─ 删除本地账号与会话（原型）
+  ├─ POST /api/auth/recover（用户名 + 恢复码 + 新密码）
+  ├─ 恢复码哈希不匹配 → 统一错误
+  └─ 更新密码并吊销全部会话 → 回到登录
 ```
 
-存储键：
+### 3.1 账本 API
+
+记账与明细已改为数据库驱动：
+
+```text
+进入明细
+  ├─ GET /api/ledger/transactions?from=本月1日&to=本月最后一天
+  └─ 渲染月度概览、分类占比与按日账目
+
+进入记一笔
+  ├─ GET /api/ledger/categories
+  ├─ 分类首次访问由后端调用 ledger_bootstrap_user 初始化 19 条默认分类
+  └─ POST /api/ledger/transactions
+       ├─ 服务端校验分类归属/类型、金额、备注
+       ├─ 写入 ledger_transactions
+       └─ 返回账目，前端跳回明细
+
+统计 / 搜索
+  └─ GET /api/ledger/transactions?from=...&to=...
+```
+
+前端本地存储键：
 
 | key | 内容 |
 | --- | --- |
-| `qingji_demo_accounts_v1` | 账号对象：用户名、注册时间、盐、密码哈希、恢复码 |
-| `qingji_demo_session_v1` | 30 天演示会话 |
+| `qingji_backend_user_v1` | 公开用户信息（username/createdAt），用于即时渲染；不含密码或会话 |
 | `qingji_demo_privacy` | 隐私模式偏好 |
 | `qingji_demo_backup_reminder` | 备份提醒偏好 |
 | `qingji_demo_flash` | 跨页面一次性提示 |
+
+账目不再写入浏览器本地存储；会话凭证只存在于后端 HttpOnly Cookie，前端 JavaScript 不可读取。
 
 ## 4. 页面职责
 
@@ -85,16 +110,17 @@
 | `account.html` | 用户名、注册时间、修改密码、恢复码、注销 | 打开密码/恢复码弹层，退出与注销确认 |
 | `data.html` | 存储状态、导出、导入、复制备份、提醒、清除 | 文件选择、剪贴板、确认弹层 |
 | `categories.html` | 支出/收入分类、二级分类 | 切换类型、新增、编辑、隐藏、删除自定义分类 |
-| `login.html` | 用户名 + 密码 | 本地账号校验、密码显示切换、`next` 回跳 |
+| `login.html` | 用户名 + 密码 | 后端账号校验、密码显示切换、`next` 回跳 |
 | `register.html` | 用户名 + 密码 + 确认密码 + 隐私同意 | 注册按钮受隐私勾选控制 |
-| `forgot-password.html` | 用户名 + 恢复码 + 新密码 | 重置本地密码 |
+| `forgot-password.html` | 用户名 + 恢复码 + 新密码 | 后端恢复码校验与密码重置 |
 | `privacy.html` | 数据边界与风险说明 | 返回登录 / 注册 |
 
 ## 5. 共享脚本
 
 | 文件 | 职责 |
 | --- | --- |
-| `assets/js/auth.js` | 本地账号、PBKDF2 哈希、会话、登录门禁、`next` 白名单 |
+| `assets/js/auth.js` | 调用后端认证 API、校验 Cookie 会话、缓存公开用户、登录门禁、`next` 白名单 |
+| `assets/js/ledger.js` | 调用分类与账目 API、标准化日期/金额/分类字段 |
 | `assets/js/layout.js` | 注入顶栏、移动端底部导航、悬浮按钮、页脚；读取当前用户显示头像 |
 | `assets/js/main.js` | 通用 Toast/弹层/表单、搜索、统计图表、记账、分类、备份、账号弹层 |
 | `assets/css/tokens.css` | 颜色、圆角、阴影、字体、图表色板 |
@@ -134,7 +160,7 @@
 
 ## 7. 原型范围
 
-- 已实现前端交互：登录门禁、注册、登录、找回、退出、搜索弹层、统计切换、记账保存、分类增删改、备份/导入/复制演示、账号弹层。
-- 未连接真实后端：账号与账本存储在本机 `localStorage`，备份导入/导出为演示交互。
-- PRD 中但原型未实现的页面/能力：云端同步、PWA 安装、预算详情页、资金账户与转账、周期记账、智能洞察、多币种。
-- 正式实现时，认证必须迁移到服务端；账本数据应继续与认证数据分离，并补齐服务端限流、CSRF、HttpOnly Cookie 和密码找回审核。
+- 已实现：后端注册/登录/退出/会话校验/找回密码；账本分类读取、账目创建与日期范围查询；前端明细/统计/搜索读取数据库，记一笔写入数据库。
+- 账本已写入项目本地 MySQL 的 `ledger_*` 表，按账号隔离；登录不等于多设备云同步。
+- PRD 中但尚未实现的页面/能力：云端同步、PWA 安装、预算详情页、资金账户与转账、周期记账、智能洞察、多币种、完整导出/导入与账号注销。
+- 后续生产化：启用 HTTPS 与 `SESSION_COOKIE_SECURE=true`；将 `APP_CORS_ORIGINS` 限定为正式域名；为账本云同步单独设计加密与授权。
